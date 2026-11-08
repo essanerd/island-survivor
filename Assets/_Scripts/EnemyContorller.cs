@@ -11,9 +11,11 @@ public class EnemyContorller : MonoBehaviour
     private int _enemyCount = 5;
 
     [SerializeField]
+    private ScoreManager _scoreManager;
+
+    [SerializeField]
     private Transform _spawnTopLeft, spawntopRight, spawnBottomLeft, spawnBottomRight;
 
-    // Start is called once before the first execution of Update
     void Start()
     {
         for (int i = 0; i < _enemyCount; i++)
@@ -37,6 +39,7 @@ public class EnemyContorller : MonoBehaviour
         if (enemyScript != null)
         {
             enemyScript.OnDie += SpawnEnemy;
+            enemyScript.OnDie += () => _scoreManager.AddPoints(10);
         }
     }
 
@@ -72,12 +75,6 @@ public class EnemyContorller : MonoBehaviour
 
         return selectedTransform.position +
             (Vector3)Random.insideUnitSphere;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public enum SpawnPointType
