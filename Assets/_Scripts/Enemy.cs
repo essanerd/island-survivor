@@ -17,41 +17,45 @@ public class Enemy : MonoBehaviour
 
     public event Action OnDie;
 
-    // Start is called once before the first execution of Update
     void Start()
     {
         _rb2d = GetComponent<Rigidbody2D>();
 
+        FindPlayer();
+    }
+
+    void Update()
+    {
+        Move();
+    }
+
+    private void FindPlayer()
+    {
         Player player = FindObjectOfType<Player>();
 
         if (player != null)
         {
             _playerTransform = player.transform;
         }
-        else
-        {
-            Stopped = true;
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Move();
     }
 
     private void Move()
     {
+        if (_playerTransform == null)
+        {
+            FindPlayer();
+        }
+
         if (Stopped || _playerTransform == null)
         {
-            _rb2d.velocity = Vector2.zero;
+            _rb2d.linearVelocity = Vector2.zero;
             return;
         }
 
         Vector3 directionToPlayer =
             _playerTransform.position - transform.position;
 
-        _rb2d.velocity = directionToPlayer.normalized * _speed;
+        _rb2d.linearVelocity = directionToPlayer.normalized * _speed;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

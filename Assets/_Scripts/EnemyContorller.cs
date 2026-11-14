@@ -1,6 +1,5 @@
 
 using UnityEngine;
-using System.Collections.Generic;
 
 public class EnemyContorller : MonoBehaviour
 {
@@ -8,17 +7,21 @@ public class EnemyContorller : MonoBehaviour
     private GameObject _enemyPrefab;
 
     [SerializeField]
-    private int _enemyCount = 5;
-
-    [SerializeField]
     private ScoreManager _scoreManager;
 
     [SerializeField]
-    private Transform _spawnTopLeft, spawntopRight, spawnBottomLeft, spawnBottomRight;
+    private Transform _spawnTopLeft, spawntopRight,
+        spawnBottomLeft, spawnBottomRight;
+
+    [SerializeField]
+    private Transform _spawnTopMiddle, _spawnBottomMiddle,
+        _spawnCenter;
 
     void Start()
     {
-        for (int i = 0; i < _enemyCount; i++)
+        int enemyCount = DifficultyManager.EnemyCount;
+
+        for (int i = 0; i < enemyCount; i++)
         {
             SpawnEnemy();
         }
@@ -26,11 +29,11 @@ public class EnemyContorller : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        Vector3 spawnPostion = SelectRandomPosition();
+        Vector3 spawnPosition = SelectRandomPosition();
 
         GameObject enemyObject = Instantiate(
             _enemyPrefab,
-            spawnPostion,
+            spawnPosition,
             Quaternion.identity
         );
 
@@ -45,43 +48,24 @@ public class EnemyContorller : MonoBehaviour
 
     private Vector3 SelectRandomPosition()
     {
-        Transform selectedTransform = null;
-
-        int randomValue = Random.Range(0, 4);
-        SpawnPointType spawnType = (SpawnPointType)randomValue;
-
-        switch (spawnType)
+        Transform[] spawnPoints =
         {
-            case SpawnPointType.TopLeft:
-                selectedTransform = _spawnTopLeft;
-                break;
+            _spawnTopLeft,
+            spawntopRight,
+            spawnBottomLeft,
+            spawnBottomRight,
+            _spawnTopMiddle,
+            _spawnBottomMiddle,
+            _spawnCenter
+        };
 
-            case SpawnPointType.TopRight:
-                selectedTransform = spawntopRight;
-                break;
+        int activeSpawnPoints = DifficultyManager.SpawnPointCount;
 
-            case SpawnPointType.BottomLeft:
-                selectedTransform = spawnBottomLeft;
-                break;
+        activeSpawnPoints = Mathf.Min(activeSpawnPoints, 7);
 
-            case SpawnPointType.BottomRight:
-                selectedTransform = spawnBottomRight;
-                break;
+        int randomValue = Random.Range(0, activeSpawnPoints);
 
-            default:
-                selectedTransform = _spawnTopLeft;
-                break;
-        }
-
-        return selectedTransform.position +
+        return spawnPoints[randomValue].position +
             (Vector3)Random.insideUnitSphere;
-    }
-
-    public enum SpawnPointType
-    {
-        TopLeft,
-        TopRight,
-        BottomLeft,
-        BottomRight
     }
 }
