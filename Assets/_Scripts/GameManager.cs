@@ -3,19 +3,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject _startPanel;
+    [SerializeField] private GameObject _startPanel;
+    [SerializeField] private GameObject _player;
+    [SerializeField] private GameObject _enemyController;
+    [SerializeField] private GameObject _scoreText;
 
-    [SerializeField]
-    private GameObject _player;
-
-    [SerializeField]
-    private GameObject _enemyController;
-
-    [SerializeField]
-    private GameObject _scoreText;
-
-    private void Start()
+    void Start()
     {
         _player.SetActive(false);
         _enemyController.SetActive(false);
